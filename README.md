@@ -1,5 +1,5 @@
 # Projet Fin d’année Tower Defense IPI
-Réalisation d'un projet type MESI dans le cadre de la formation CDEV. 
+Réalisation d'un projet type MESI dans le cadre de la formation CDEV.  
 Avec 5 jeunes et beaux développeurs.
 
 -----------------------
@@ -22,8 +22,7 @@ L'amélioration ou la construction se fait en récoltant des ressources sur la c
 ## Nombre de joueurs :
 1 à 4 joueurs simultanés.
 
-
-# Spécificité Technique.
+## Spécificité Technique.
 
 ## Forme technique :
 Graphismes en 3D
