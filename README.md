@@ -20,9 +20,10 @@ L'amélioration ou la construction se fait en récoltant des ressources sur la c
 
 
 ## Nombre de joueurs :
-1 à 4 joueurs simultanés.  
-Spécificité Technique.
+1 à 4 joueurs simultanés.
 
+
+# Spécificité Technique.
 
 ## Forme technique :
 Graphismes en 3D
