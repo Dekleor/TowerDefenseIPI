@@ -1,13 +1,23 @@
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
+    //Appel du script Player motor
+    private PlayerMotor motor;
+
     [SerializeField] private float _moveSpeed = 10f;
+    [SerializeField] private float mouseSensivity = 3f;
     [SerializeField] private float _jumpSpeed = 0.5f;
     [SerializeField] private float _gravity = 2f;
 
     CharacterController _characterController;
-    Vector3 _moveDirection;
+    Vector3 _moveDirection;    
+
+// Start est appelé au lancement de l'application
+ void Start()
+{
+        motor = GetComponent<PlayerMotor>();
+}
 
 
 /*  
@@ -15,7 +25,7 @@ public class PlayerMovement : MonoBehaviour
 *   d'une scène, soit lorsqu'un GameObject précédemment inactif est défini sur actif, ou après l'initialisation 
 *   d'un GameObject créé avec Object.Instantiate .
 *   Utilisez Awake pour initialiser des variables ou des états avant le démarrage de l'application.
-*/
+*/  
     void Awake() =>_characterController = GetComponent<CharacterController>();
     
 /*
@@ -25,29 +35,40 @@ public class PlayerMovement : MonoBehaviour
 *   Use FixedUpdate when using Rigidbody. Set a force to a Rigidbody and it applies each fixed frame. 
 *   FixedUpdate occurs at a measured time step that typically does not coincide with MonoBehaviour.Update.
 */  
-    void FixedUpdate()
+    void Update()
     {
         //Input.GetAxis("") Renvoie la valeur de l'axe virtuel identifié par axisName. La valeur sera comprise entre -1 et 1 pour les périphériques d'entrée clavier et joystick.
         // Pour configurer votre entrée ou afficher les options de axisName, accédez à Edit > Project Settings > Input Manager.
         // Toutes les entrée sont en double. Le premier est utiliser pour clavier-souris et le seconds pour manette
-        float horizontal  = Input.GetAxis("Horizontal");
-        float vertical  = Input.GetAxis("Vertical");
+        float xMov  = Input.GetAxis("Horizontal");
+        float zMov  = Input.GetAxis("Vertical");
 
-        Vector3 inputDirection = new Vector3(horizontal, 0, vertical);
-        Vector3 transformDirection = transform.TransformDirection(inputDirection);
 
-        // Calcul du déplacement ( vitesse * temps en seconde depuis la derniere frame * direction )
-        Vector3 flatMovement = _moveSpeed * Time.deltaTime * transformDirection;
+        Vector3 moveHorizontal = transform.right * xMov;
+        Vector3 moveVertical = transform.forward * zMov;
 
-        _moveDirection = new Vector3(flatMovement.x, _moveDirection.y, flatMovement.z);
-        if (PlayerJumped())
-            _moveDirection.y  =_jumpSpeed;
-        else if (_characterController.isGrounded)
-            _moveDirection.y = 0f;
-        else
-            _moveDirection.y -= _gravity*Time.deltaTime;
-        _characterController.Move(_moveDirection);
+        Vector3 velocity = ( moveVertical + moveHorizontal).normalized * _moveSpeed;
+
+        motor.Move(velocity);
+        float yRot = Input.GetAxis("Mouse X");
+
+        Vector3 rotation = new Vector3( 0, yRot , 0)* mouseSensivity;
+
+        motor.Rotate(rotation);
+
+        float xRot = Input.GetAxis("Mouse Y");
+
+        Vector3 cameraRotation = new Vector3(xRot, 0 , 0) * mouseSensivity;
+
+        motor.RotateCamera(cameraRotation);
+
+        /*
+         Vector3 inputDirection = new Vector3(xMov, 0, zMov);
+         Vector3 transformDirection = transform.TransformDirection(inputDirection);
+        */
     }
+
+
     private bool PlayerJumped(){
         bool jumpKeyDown;
         if (Input.GetAxis("Jump") != 0){
